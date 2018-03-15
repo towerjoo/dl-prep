@@ -140,6 +140,73 @@ class Excercise:
         C = 3
         print np.random.uniform(5, 10, R*C).reshape((R, -1))
         print np.random.uniform(5, 10, (R, C))
+
+    def exec21(self):
+        # Print or show only 3 decimal places of the numpy array rand_arr.
+        rand_arr = np.random.random((5,3))
+        np.set_printoptions(precision=3)
+        print rand_arr
+
+    def exec22(self):
+        # Pretty print rand_arr by suppressing the scientific notation (like 1e10)
+        np.random.seed(100)
+        rand_arr = np.random.random([3,3])/1e3
+        np.set_printoptions(suppress=True)
+        print rand_arr
+
+    def exec23(self):
+        # Limit the number of items printed in python numpy array a to a maximum of 6 elements.
+        a = np.arange(15)
+        np.set_printoptions(threshold=6)
+        print a
+
+    def exec24(self):
+        # Print the full numpy array a without truncating.
+        a = np.arange(15)
+        np.set_printoptions(threshold=6)
+        print a
+        np.set_printoptions(threshold=a.size)
+        print a
+
+    def exec25(self):
+        # Import the iris dataset keeping the text intact.
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris = np.genfromtxt(url, delimiter=',', dtype='object')
+        print iris[:3]
+
+    def exec26(self):
+        # Extract the text column species from the 1D iris imported in previous question.
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris_1d = np.genfromtxt(url, delimiter=',', dtype=None)
+        print np.array([x[-1] for x in iris_1d])
+
+    def exec27(self):
+        # Convert the 1D iris to 2D array iris_2d by omitting the species text field.
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris_1d = np.genfromtxt(url, delimiter=',', dtype=None)
+        #print np.array([[x[0], x[1], x[2], x[3]] for x in iris_1d])
+        print np.array([x.tolist()[:-1] for x in iris_1d])
+
+    def exec28(self):
+        # Find the mean, median, standard deviation of iris's sepallength (1st column)
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris = np.genfromtxt(url, delimiter=',', dtype='object')
+        sepallength = iris[:, 0].astype("float")
+        print np.mean(sepallength), np.median(sepallength), np.std(sepallength)
+
+    def exec29(self):
+        # Create a normalized form of iris's sepallength whose values range exactly between 0 and 1 so that the minimum has value 0 and maximum has value 1.
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        sepallength = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0])
+        # we might need to cache the min to save the computation
+        print (sepallength - sepallength.min()) / (sepallength.max() - sepallength.min())
+
+    def exec30(self):
+        # Compute the softmax score of sepallength.
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        sepallength = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0])
+        print (np.e**sepallength) / (np.e**sepallength).sum()
+
         
 
 if __name__ == "__main__":
