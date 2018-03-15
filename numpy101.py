@@ -303,6 +303,108 @@ class Excercise:
         cats = [label_map[x] for x in bins]
         print cats[:5]
 
+    def exec41(self):
+        # Create a new column for volume in iris_2d, where volume is (pi x petallength x sepal_length^2)/3
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris_2d = np.genfromtxt(url, delimiter=',', dtype='object')
+        names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+        petallength = iris_2d[:, 2].astype("float")
+        sepallength = iris_2d[:, 0].astype("float")
+        print np.c_[iris_2d, np.pi * petallength * (sepallength ** 2) / 3][:5]
+
+    def exec42(self):
+        # Randomly sample iris's species such that setose is twice the number of versicolor and virginica
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris = np.genfromtxt(url, delimiter=',', dtype='object')
+        species = ['Iris-setosa','Iris-versicolor','Iris-virginica']
+        species_out = np.random.choice(species, 150, p=[0.5, 0.25, 0.25])
+        print np.unique(species_out, return_counts=True)
+
+        # or
+        probs = np.r_[np.linspace(0, .5, num=50), np.linspace(.501, .75, num=50), np.linspace(.751, 1., num=50)]
+        index = np.searchsorted(probs, np.random.random(150))
+        species_out = iris[:, -1][index]
+        print np.unique(species_out, return_counts=True)
+
+    def exec43(self):
+        # What is the value of second longest petallength of species setosa
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris = np.genfromtxt(url, delimiter=',', dtype='object')
+        names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+        petallength = iris[iris[:,-1] == 'Iris-setosa'][:, 2].astype("float")
+        print np.unique(np.sort(petallength))[-2]
+
+    def exec44(self):
+        # Sort the iris dataset based on sepallength column.
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris = np.genfromtxt(url, delimiter=',', dtype='object')
+        names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+        sepallength = iris[:, 0].astype("float")
+        sorted_index = np.argsort(sepallength)
+        print iris[sorted_index]
+
+    def exec45(self):
+        # Find the most frequent value of petal length (3rd column) in iris dataset.
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris = np.genfromtxt(url, delimiter=',', dtype='object')
+        names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+        values, counter = np.unique(iris[:, 2], return_counts=True)
+        print values[np.argsort(counter)[-1]]
+        # or
+        print values[np.argmax(counter)]
+
+    def exec46(self):
+        #  Find the position of the first occurrence of a value greater than 1.0 in petalwidth 4th column of iris dataset.
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris = np.genfromtxt(url, delimiter=',', dtype='object')
+        petalwidth = iris[:, 3].astype("float")
+        print np.argwhere(petalwidth > 1.0)[0]
+        # or
+        print np.argmax(petalwidth > 1.0)
+
+    def exec47(self):
+        # From the array a, replace all values greater than 30 to 30 and less than 10 to 10.
+        np.random.seed(100)
+        a = np.random.uniform(1,50, 20)
+        print a
+        print np.where(a > 30, 30, np.where(a < 10, 10, a))
+        # or use clip
+        print np.clip(a, 10, 30)
+        # change the original array
+        a[a > 30] = 30
+        a[a < 10] = 10
+        print a
+
+    def exec48(self):
+        # Get the positions of top 5 maximum values in a given array a.
+        np.random.seed(100)
+        a = np.random.uniform(1,50, 20)
+        print np.argsort(a)[-5:]
+
+    def exec49(self):
+        # Compute the counts of unique values row-wise.
+        np.random.seed(100)
+        arr = np.random.randint(1,11,size=(6, 10))
+        out = None
+        for r in arr:
+            values = np.zeros((1, 10), dtype="int")
+            v, c = np.unique(r, return_counts=True)
+            values[0, v-1] = c
+            if out is None:
+                out = values
+            else:
+                out = np.r_[out, values]
+        print out
+
+    def exec50(self):
+        # Convert array_of_arrays into a flat linear 1d array.
+        arr1 = np.arange(3)
+        arr2 = np.arange(3,7)
+        arr3 = np.arange(7,10)
+        array_of_arrays = np.array([arr1, arr2, arr3])
+        print np.concatenate(array_of_arrays)
+        # or
+        print np.hstack(array_of_arrays)
 
 if __name__ == "__main__":
     num = sys.argv[-1]
