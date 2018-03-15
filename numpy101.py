@@ -2,6 +2,10 @@
 # from: https://www.machinelearningplus.com/101-numpy-exercises-python/
 import numpy as np
 import sys
+import PIL
+from PIL import Image
+import requests
+import StringIO
 
 
 class Excercise:
@@ -405,6 +409,115 @@ class Excercise:
         print np.concatenate(array_of_arrays)
         # or
         print np.hstack(array_of_arrays)
+
+    def exec51(self):
+        # Compute the one-hot encodings (dummy binary variables for each unique value in the array)
+        np.random.seed(101)
+        arr = np.random.randint(1,4, size=6)
+        values = np.unique(arr)
+        encoded = np.zeros((arr.size, values.size))
+        for row, a in enumerate(arr):
+            col = np.where(values == a)
+            encoded[row, col] = 1
+        print encoded
+
+    def exec52(self):
+        # Create row numbers grouped by a categorical variable. Use the following sample from iris species as input.
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        species = np.genfromtxt(url, delimiter=',', dtype='str', usecols=4)
+        species_small = np.sort(np.random.choice(species, size=20))
+        print species_small
+        names, count = np.unique(species_small, return_counts=True)
+        print np.hstack([np.arange(x) for x in count])
+
+    def exec53(self):
+        # Create group ids based on a given categorical variable. Use the following sample from iris species as input.
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        species = np.genfromtxt(url, delimiter=',', dtype='str', usecols=4)
+        species_small = np.sort(np.random.choice(species, size=20))
+        print species_small
+        names, count = np.unique(species_small, return_counts=True)
+        print np.repeat(np.arange(count.size), count)
+
+    def exec54(self):
+        # Create the ranks for the given numeric array a.
+        np.random.seed(10)
+        a = np.random.randint(20, size=10)
+        print a
+        print np.argsort(np.argsort(a))
+
+    def exec55(self):
+        # Create a rank array of the same shape as a given numeric array a.
+        np.random.seed(10)
+        a = np.random.randint(20, size=[2,5])
+        print(a)
+        print np.argsort(np.argsort(a.ravel())).reshape(a.shape)
+
+    def exec56(self):
+        # Compute the maximum for each row in the given array.
+        np.random.seed(100)
+        a = np.random.randint(1,10, [5,3])
+        print a
+        print np.amax(a, axis=1)
+
+    def exec57(self):
+        # Compute the min-by-max for each row for given 2d numpy array.
+        np.random.seed(100)
+        a = np.random.randint(1,10, [5,3])
+        print np.apply_along_axis(lambda r: r.min() / r.max(), arr=a.astype("float"), axis=1)
+
+    def exec58(self):
+        # Find the duplicate entries (2nd occurrence onwards) in the given numpy array and mark them as True. First time occurrences should be False.
+        np.random.seed(100)
+        a = np.random.randint(0, 5, 10)
+        print('Array: ', a)
+        #> Array: [0 0 3 0 2 4 2 2 2 2]
+        mark = np.ones(a.size, dtype="bool")
+        values, index = np.unique(a, return_index=True)
+        mark[index] = False
+        print mark
+
+
+        # python approach
+        marked = []
+        for index, item in enumerate(a):
+            a[index] = item in marked
+            marked.append(item)
+        print a.astype("bool")
+
+    def exec59(self):
+        # Find the mean of a numeric column grouped by a categorical column in a 2D numpy array
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris = np.genfromtxt(url, delimiter=',', dtype='object')
+        names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+        species = np.unique(iris[:, -1])
+        index = 0 # sepallength
+        index = 1 # sepalwidth
+        #index = 2 # petallength
+        #index = 3 # petalwidth
+        print np.vstack([[v, iris[iris[:, -1] == species[i]][:, index].astype("float").mean()] for i, v in enumerate(species)])
+
+    def exec60(self):
+        # Import the image from the following URL and convert it to a numpy array.
+        # Import image from URL
+        URL = 'https://upload.wikimedia.org/wikipedia/commons/8/8b/Denali_Mt_McKinley.jpg'
+        response = requests.get(URL)
+
+        # Read it as Image
+        I = Image.open(StringIO.StringIO(response.content))
+
+        # Optionally resize
+        I = I.resize([150,150])
+
+        # Convert to numpy array
+        arr = np.asarray(I)
+
+        # Optionaly Convert it back to an image and show
+        im = PIL.Image.fromarray(np.uint8(arr))
+        Image.Image.show(im)
+
+            
+            
 
 if __name__ == "__main__":
     num = sys.argv[-1]
