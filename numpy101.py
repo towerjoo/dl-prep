@@ -516,6 +516,71 @@ class Excercise:
         im = PIL.Image.fromarray(np.uint8(arr))
         Image.Image.show(im)
 
+    def exec61(self):
+        # Drop all nan values from a 1D numpy array
+        a = np.array([1,2,3,np.nan,5,6,7,np.nan])
+        print a[~np.isnan(a)]
+
+    def exec62(self):
+        # Compute the euclidean distance between two arrays a and b
+        a = np.array([1,2,3,4,5])
+        b = np.array([4,5,6,7,8])
+        print np.linalg.norm(a-b)
+
+    def exec63(self):
+        # Find all the peaks in a 1D numpy array a. Peaks are points surrounded by smaller values on both sides.
+        a = np.array([1, 3, 7, 1, 2, 6, 0, 1])
+        t = np.sign(np.diff(a))
+        print np.where(np.diff(t) == -2)[0] + 1
+
+    def exec64(self):
+        # Subtract the 1d array b_1d from the 2d array a_2d, such that each item of b_1d subtracts from respective row of a_2d.
+        a_2d = np.array([[3,3,3],[4,4,4],[5,5,5]])
+        b_1d = np.array([1,2,3])
+        print a_2d - b_1d.reshape((3, -1))
+
+    def exec65(self):
+        # Find the index of 5th repetition of number 1 in x.
+        x = np.array([1, 2, 1, 1, 3, 4, 3, 1, 1, 2, 1, 1, 2])
+        print [i for i, v in enumerate(x) if v == 1][4]
+        print np.where(x == 1)[0][4]
+        print np.argsort(x)[4]
+
+    def exec66(self):
+        # Convert numpy's datetime64 object to datetime's datetime object
+        dt64 = np.datetime64('2018-02-25 22:10:10')
+        from datetime import datetime
+        print dt64.astype(datetime)
+
+    def exec67(self):
+        # Compute the moving average of window size 3, for the given 1D array.
+        np.random.seed(100)
+        Z = np.random.randint(10, size=10)
+        print Z
+        start = 0
+        W = 3
+        end = Z.size - W
+        print [Z[i:i+W].mean() for i in range(start, end+1)]
+        print np.convolve(Z, np.ones(3) / 3, mode="valid")
+
+    def exec68(self):
+        # Create a numpy array of length 10, starting from 5 and has a step of 3 between consecutive numbers
+        print np.array([5+3*i for i in range(10)])
+
+    def exec69(self):
+        # Given an array of a non-continuous sequence of dates. Make it a continuous sequence of dates, by filling in the missing dates.
+        dates = np.arange(np.datetime64('2018-02-01'), np.datetime64('2018-02-25'), 2)
+        filled_in = np.array([np.arange(date, (date+d)) for date, d in zip(dates, np.diff(dates))]).reshape(-1)
+        print np.r_[filled_in, dates[-1]]
+
+    def exec70(self):
+        # From the given 1d array arr, generate a 2d matrix using strides, with a window length of 4 and strides of 2, like [[0,1,2,3], [2,3,4,5], [4,5,6,7]..]
+        arr = np.arange(15)
+        print arr
+        stride = 2
+        window = 4
+        print np.vstack([arr[i:i+window] for i in range(0, arr.size - window, stride)])
+        #print np.r_[[arr[i:i+window] for i in range(0, arr.size - window, stride)]]
             
             
 
