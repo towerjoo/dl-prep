@@ -207,7 +207,102 @@ class Excercise:
         sepallength = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0])
         print (np.e**sepallength) / (np.e**sepallength).sum()
 
-        
+    def exec31(self):
+        # Find the 5th and 95th percentile of iris's sepallength
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        sepallength = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0])
+        #print np.percentile(sepallength, 5), np.percentile(sepallength, 95)
+        print np.percentile(sepallength, [5, 95])
+
+    def exec32(self):
+        # Insert np.nan values at 20 random positions in iris_2d dataset
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris_2d = np.genfromtxt(url, delimiter=',', dtype='object')
+        # method 1: ensure 20 unique positions
+        nans = np.full(iris_2d.size, True, dtype="bool")
+        nans[:20] = False
+        np.random.shuffle(nans)
+        nans = nans.reshape((iris_2d.shape[0], -1))
+        #print np.where(nans, iris_2d, np.nan)
+        # method 2: not ensure
+        r, c = iris_2d.shape
+        iris_2d[np.random.choice(r, 20), np.random.choice(c, 20)] = np.nan
+        print iris_2d
+
+    def exec33(self):
+        #  Find the number and position of missing values in iris_2d's sepallength (1st column)
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris_2d = np.genfromtxt(url, delimiter=',', dtype='float')
+        iris_2d[np.random.randint(150, size=20), np.random.randint(4, size=20)] = np.nan
+        sepallength = iris_2d[:, 0]
+        print np.isnan(sepallength).sum(), np.where(np.isnan(sepallength))
+
+    def exec34(self):
+        # Filter the rows of iris_2d that has petallength (3rd column) > 1.5 and sepallength (1st column) < 5.0
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris_2d = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0,1,2,3])
+        print iris_2d[(iris_2d[:, 2] > 1.5) & (iris_2d[:, 0] < 5.0)]
+        print iris_2d[np.where((iris_2d[:, 2] > 1.5) & (iris_2d[:, 0] < 5.0))]
+
+    def exec35(self):
+        # Select the rows of iris_2d that does not have any nan value.
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris_2d = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0,1,2,3])
+        iris_2d[np.random.randint(150, size=20), np.random.randint(4, size=20)] = np.nan
+        nan_rows = np.array([~np.any(np.isnan(row)) for row in iris_2d])
+        #print iris_2d[nan_rows]
+        # method 2
+        print iris_2d[np.sum(np.isnan(iris_2d),axis=1) == 0]
+
+    def exec36(self):
+        # Find the correlation between SepalLength(1st column) and PetalLength(3rd column) in iris_2d
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris_2d = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0,1,2,3])
+        print np.corrcoef(iris_2d[:, 0], iris_2d[:, 2])[0, 1]
+
+    def exec37(self):
+        # Find out if iris_2d has any missing values.
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris_2d = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0,1,2,3])
+        iris_2d[np.random.randint(150, size=20), np.random.randint(4, size=20)] = np.nan
+        print np.isnan(iris_2d).sum() > 0
+        print np.isnan(iris_2d).any()
+
+    def exec38(self):
+        # Replace all ccurrences of nan with 0 in numpy array
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris_2d = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0,1,2,3])
+        iris_2d[np.random.randint(150, size=20), np.random.randint(4, size=20)] = np.nan
+        print iris_2d[:5]
+        # NOT change the original data
+        print np.where(np.isnan(iris_2d), 0, iris_2d)[:5]
+        # change the original data
+        iris_2d[np.isnan(iris_2d)] = 0
+        print iris_2d[:5]
+
+    def exec39(self):
+        # Find the unique values and the count of unique values in iris's species
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris = np.genfromtxt(url, delimiter=',', dtype='object')
+        names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+        print np.unique(iris[:, -1], return_counts=True)
+
+    def exec40(self):
+        # Bin the petal length (3rd) column of iris_2d to form a text array, such that if petal length is:
+        # Less than 3 --> 'small'
+        # 3-5 --> 'medium'
+        # '>=5 --> 'large'
+        url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+        iris = np.genfromtxt(url, delimiter=',', dtype='object')
+        names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+        petallength = iris[:, 2].astype("float")
+        print np.where(petallength < 3, "small", np.where(petallength >= 5, "large", "medium"))[:5]
+        # or
+        bins = np.digitize(petallength, [0, 3, 5, 10])
+        label_map = {1: 'small', 2: 'medium', 3: 'large', 4: np.nan}
+        cats = [label_map[x] for x in bins]
+        print cats[:5]
+
 
 if __name__ == "__main__":
     num = sys.argv[-1]
